@@ -1,0 +1,11 @@
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\BackendApplication.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\controller\HealthController.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\controller\ItemController.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\dto\request\ItemRequest.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\dto\response\ItemResponse.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\entity\Item.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\exception\BusinessException.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\exception\GlobalExceptionHandler.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\exception\NotFoundException.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\repository\ItemRepository.java
+C:\test_fullstack\fullstack-test-tegar\backend\src\main\java\com\tegar\fullstack\backend\service\ItemService.java

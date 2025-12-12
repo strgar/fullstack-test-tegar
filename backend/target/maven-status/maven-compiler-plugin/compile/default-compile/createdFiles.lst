@@ -1,0 +1,14 @@
+com\tegar\fullstack\backend\dto\request\ItemRequest$ItemRequestBuilder.class
+com\tegar\fullstack\backend\dto\response\ItemResponse.class
+com\tegar\fullstack\backend\controller\HealthController.class
+com\tegar\fullstack\backend\dto\response\ItemResponse$ItemResponseBuilder.class
+com\tegar\fullstack\backend\controller\ItemController.class
+com\tegar\fullstack\backend\exception\BusinessException.class
+com\tegar\fullstack\backend\dto\request\ItemRequest.class
+com\tegar\fullstack\backend\service\ItemService.class
+com\tegar\fullstack\backend\BackendApplication.class
+com\tegar\fullstack\backend\exception\NotFoundException.class
+com\tegar\fullstack\backend\entity\Item.class
+com\tegar\fullstack\backend\exception\GlobalExceptionHandler.class
+com\tegar\fullstack\backend\entity\Item$ItemBuilder.class
+com\tegar\fullstack\backend\repository\ItemRepository.class
