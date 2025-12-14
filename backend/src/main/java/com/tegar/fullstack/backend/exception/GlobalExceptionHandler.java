@@ -1,58 +1,87 @@
 package com.tegar.fullstack.backend.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
-    // Business exceptions -> HTTP 501 (human friendly)
+    
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<Map<String, Object>> handleBusiness(BusinessException ex) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("status", 501);
-        body.put("message", ex.getMessage());
-        body.put("errors", ex.getErrors());
-        return ResponseEntity.status(501).body(body);
+    public ResponseEntity<Map<String, Object>> handleBusinessException(BusinessException ex) {
+        log.warn("Business exception: {}", ex.getMessage());
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", ex.getStatusCode());
+        response.put("message", ex.getMessage());
+        
+        return ResponseEntity.status(ex.getStatusCode()).body(response);
     }
-
-    // Convert validation errors (from @Valid) into 501 per spec
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
-        Map<String, String> fieldErrors = ex.getBindingResult().getFieldErrors().stream()
-                .collect(Collectors.toMap(
-                        fe -> fe.getField(),
-                        fe -> fe.getDefaultMessage() == null ? "invalid" : fe.getDefaultMessage(),
-                        (a, b) -> a));
-        Map<String, Object> body = new HashMap<>();
-        body.put("status", 501);
-        body.put("message", "Validasi input gagal. Mohon periksa kembali input Anda.");
-        body.put("errors", fieldErrors);
-        return ResponseEntity.status(501).body(body);
+    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", 501);
+        response.put("message", "Validasi gagal");
+        response.put("errors", errors);
+        
+        return ResponseEntity.status(501).body(response);
     }
-
-    // Not found -> 404 (machine message OK)
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(NotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(Map.of("status", 404, "message", ex.getMessage()));
+    
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Map<String, Object>> handleBadCredentialsException(BadCredentialsException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", 501);
+        response.put("message", "Email atau password salah");
+        
+        return ResponseEntity.status(501).body(response);
     }
-
-    // Fallback: let Spring produce 500 with machine-style message for bugs
+    
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDeniedException(AccessDeniedException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", 403);
+        response.put("message", "Akses ditolak");
+        
+        return ResponseEntity.status(403).body(response);
+    }
+    
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Map<String, Object>> handleTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", 400);
+        response.put("message", "Parameter tidak valid: " + ex.getName());
+        
+        return ResponseEntity.status(400).body(response);
+    }
+    
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleOther(Exception ex) {
-        // log if necessary
-        Map<String, Object> body = new HashMap<>();
-        body.put("status", 500);
-        body.put("error", ex.getClass().getSimpleName());
-        body.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+    public ResponseEntity<Map<String, Object>> handleGenericException(Exception ex) {
+        log.error("Unexpected error: ", ex);
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", 500);
+        response.put("message", "Terjadi kesalahan sistem");
+        response.put("error", ex.getClass().getSimpleName());
+        
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

@@ -1,0 +1,17 @@
+{
+  "name": "hr-system-frontend",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "HR System Frontend - Clean Code Architecture",
+  "scripts": {
+    "start": "npx live-server --port=3000",
+    "build": "echo 'Build process would go here'",
+    "test": "echo 'Tests would go here'"
+  },
+  "dependencies": {
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
